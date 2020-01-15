@@ -9,20 +9,35 @@ services:
     image: 'redis:5.0.5'
     networks:
       - redis-net
+
   redis-secondary:
     image: 'redis:5.0.5'
     command: redis-server --replicaof redis 6379
     networks:
       - redis-net
+    depends_on:
+      - redis
+
   sentinel1:
     image: 'bitnami/redis-sentinel:latest'
     networks:
       - redis-net
+    depends_on:
+      - redis
+      - redis-secondary
+
   sentinel2:
     image: 'bitnami/redis-sentinel:latest'
     networks:
       - redis-net
+    depends_on:
+      - redis
+      - redis-secondary
+
   sentinel3:
     image: 'bitnami/redis-sentinel:latest'
     networks:
       - redis-net
+    depends_on:
+      - redis
+      - redis-secondary
